@@ -34,6 +34,7 @@ export const MemberFormFirstStep: React.FC<MemberFormFirstStepProps> = ({
     formState: { errors },
   } = useForm({});
 
+  // @ts-ignore
   function onFormSubmit(values) {
     setMember({ ...member, ...values });
     nextStep();

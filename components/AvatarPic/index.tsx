@@ -21,6 +21,7 @@ export const AvatarPic: React.FC<AvatarPicProps> = ({
     input.type = "file";
     input.accept = "image/*";
     input.onchange = (event) => {
+      // @ts-ignore
       const file = event.target?.files?.[0];
       if (file) {
         onUpload(file);

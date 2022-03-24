@@ -16,7 +16,7 @@ export const MemberFormThirdStep: React.FC<MemberFormThirdStepProps> = ({
   setMember,
 }) => {
   const { handleSubmit, register } = useForm();
-
+  // @ts-ignore
   function onFormSubmit(values) {
     setMember({ ...member, ...values });
 

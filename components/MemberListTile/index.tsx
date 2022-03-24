@@ -60,8 +60,8 @@ export function MemberListTile({ member, refreshData }: MemberListTileProps) {
     setDeleteButtonLoading(true);
     await api.delete("/api/members/" + member.id);
     setDeleteButtonLoading(false);
-
     // if (!refreshData) {
+    // @ts-ignore
     await refreshData();
     // }
 

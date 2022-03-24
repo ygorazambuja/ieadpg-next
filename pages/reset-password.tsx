@@ -20,6 +20,7 @@ export default function ResetPassword() {
 
   const toast = useToast();
 
+  // @ts-ignore
   async function onFormSubmit(values) {
     const { user, error } = await supabase.auth.update({
       email: "ygorazambuja@gmail.com",

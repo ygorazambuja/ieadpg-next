@@ -67,17 +67,18 @@ export const MemberFormSecondStep: React.FC<MemberFormSecondStepProps> = ({
     }
   }, [fetchCities, observableState]);
 
+  // @ts-ignore
   function onFormSubmit(values) {
     values.birthState = convertStateIdToStateName(values);
     values.birthCity = convertCityIdToCityName(values);
     setMember({ ...member, ...values });
     nextStep();
   }
-
+  // @ts-ignore
   function convertStateIdToStateName({ birthState }) {
     return states.find((state) => state.id == birthState)?.nome;
   }
-
+  // @ts-ignore
   function convertCityIdToCityName({ birthCity }) {
     return cities.find((city) => city.id == birthCity)?.nome;
   }

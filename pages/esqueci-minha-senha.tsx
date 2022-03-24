@@ -21,6 +21,7 @@ export default function ForgotMyPassword() {
 
   const toast = useToast();
 
+  // @ts-ignore
   async function onFormSubmit(values) {
     const { data, error } = await supabase.auth.api.resetPasswordForEmail(
       values.email
