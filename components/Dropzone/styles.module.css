@@ -1,0 +1,22 @@
+.dropzone {
+  border: 1px dashed #0087f7;
+  border-radius: 8px;
+  background: white;
+  padding: 90px 20px;
+  text-align: center;
+
+  min-width: 100%;
+  min-height: 40%;
+}
+
+.file {
+  display: flex;
+  justify-content: center;
+}
+
+.fileName {
+  display: flex;
+  flex-direction: column;
+  justify-items: center;
+  align-items: center;
+}
