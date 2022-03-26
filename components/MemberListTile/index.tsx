@@ -82,14 +82,14 @@ export function MemberListTile({ member, refreshData }: MemberListTileProps) {
       p={"4"}
       mb={"2"}
       _hover={{
-        background: "white",
+        background: "telegram.100",
         color: "teal.500",
         cursor: "pointer",
       }}
     >
-      <Flex h="100px">
+      <Flex h="60px">
         <Center>
-          <Avatar src={avatar} size={"xl"} />
+          <Avatar src={avatar} size={"md"} />
         </Center>
         <Flex pl="4" direction={"column"} flex={1} alignSelf={"center"}>
           <Box>

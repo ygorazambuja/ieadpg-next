@@ -15,7 +15,9 @@ export const MemberFormThirdStep: React.FC<MemberFormThirdStepProps> = ({
   onFinish,
   setMember,
 }) => {
-  const { handleSubmit, register } = useForm();
+  const { handleSubmit, register } = useForm({
+    defaultValues: member,
+  });
   // @ts-ignore
   function onFormSubmit(values) {
     setMember({ ...member, ...values });
@@ -29,40 +31,68 @@ export const MemberFormThirdStep: React.FC<MemberFormThirdStepProps> = ({
         <AvatarPic name={member.name} />
 
         <Stack direction={["column", "row"]}>
-          <Box width={"full"}>Telefone: {member.phoneNumber}</Box>
-          <Box width={"full"}>Nascimento: {member.birthDate}</Box>
-          <Box width={"full"}>Email: {member.email}</Box>
+          <Box width={"full"} py="2">
+            Telefone: {member.phoneNumber}
+          </Box>
+          <Box width={"full"} py="2">
+            Nascimento: {member.birthDate}
+          </Box>
+          <Box width={"full"} py="2">
+            Email: {member.email}
+          </Box>
         </Stack>
 
         <Divider my="2" />
 
         <Stack direction={["column", "row"]}>
-          <Box width={"full"}>Pai: {member.fatherName}</Box>
-          <Box width={"full"}>Mãe: {member.motherName}</Box>
+          <Box width={"full"} py="2">
+            Pai: {member.fatherName}
+          </Box>
+          <Box width={"full"} py="2">
+            Mãe: {member.motherName}
+          </Box>
         </Stack>
 
         <Divider my="2" />
 
         <Stack direction={["column", "row"]}>
-          <Box width={"full"}>Estado: {member.birthState}</Box>
-          <Box width={"full"}>Cidade: {member.birthCity}</Box>
+          <Box width={"full"} py="2">
+            Estado: {member.birthState}
+          </Box>
+          <Box width={"full"} py="2">
+            Cidade: {member.birthCity}
+          </Box>
         </Stack>
 
         <Divider my="2" />
 
         <Stack direction={["column", "row"]}>
-          <Box width={"full"}>Congregação: {member.congregationPlace}</Box>
-          <Box width={"full"}>Data de Batismo: {member.baptismDate}</Box>
+          <Box width={"full"} py="2">
+            Congregação: {member.congregationPlace}
+          </Box>
+          <Box width={"full"} py="2">
+            Data de Batismo: {member.baptismDate}
+          </Box>
         </Stack>
 
         <Divider my="2" />
 
         <Stack direction={["column", "row"]}>
-          <Box width={"full"}>Estado Civil: {member.civilState}</Box>
-          <Box width={"full"}>Fator RH: {member.bloodType}</Box>
-          <Box width={"full"}>Escolaridade: {member.education}</Box>
-          <Box width={"full"}>Endereço: {member.address}</Box>
-          <Box width={"full"}>Conjugue: {member.spouseName}</Box>
+          <Box width={"full"} py="2">
+            Estado Civil: {member.civilState}
+          </Box>
+          <Box width={"full"} py="2">
+            Fator RH: {member.bloodType}
+          </Box>
+          <Box width={"full"} py="2">
+            Escolaridade: {member.education}
+          </Box>
+          <Box width={"full"} py="2">
+            Endereço: {member.address}
+          </Box>
+          <Box width={"full"} py="2">
+            Conjugue: {member.spouseName}
+          </Box>
         </Stack>
 
         <Button type="submit" colorScheme={"green"} width="full" my="2">

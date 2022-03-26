@@ -32,7 +32,9 @@ export const MemberFormFirstStep: React.FC<MemberFormFirstStepProps> = ({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({});
+  } = useForm({
+    defaultValues: member,
+  });
 
   // @ts-ignore
   function onFormSubmit(values) {
@@ -87,6 +89,9 @@ export const MemberFormFirstStep: React.FC<MemberFormFirstStepProps> = ({
                 {...register("education")}
               >
                 {EDUCATION_TYPES.map((education, index) => {
+                  console.log({
+                    education: member.education,
+                  });
                   return (
                     <option value={education} key={index}>
                       {education}

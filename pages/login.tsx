@@ -12,7 +12,7 @@ import {
   Heading,
   useToast,
 } from "@chakra-ui/react";
-import { UserCredentials } from "@supabase/supabase-js";
+import { User, UserCredentials } from "@supabase/supabase-js";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
@@ -47,6 +47,8 @@ const LoginPage = () => {
       });
     }
 
+    await asyncFetchProfile(user);
+
     toast({
       status: "success",
       title: "Login realizado com sucesso",
@@ -54,6 +56,23 @@ const LoginPage = () => {
     });
 
     router.push("/");
+  }
+
+  async function asyncFetchProfile(user: User) {
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("user_id", user.id)
+      .single();
+
+    if (error) {
+      toast({
+        status: "error",
+        title: "Erro na busca do perfil",
+      });
+    }
+
+    localStorage.setItem("@ieadpg:profile", JSON.stringify(data));
   }
 
   return (

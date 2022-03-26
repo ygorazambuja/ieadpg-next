@@ -1,4 +1,11 @@
-import { Heading } from "@chakra-ui/react";
+import {
+  Heading,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+} from "@chakra-ui/react";
 import { GetServerSidePropsContext } from "next";
 import { AvatarPic } from "../../../components/AvatarPic";
 import { TemplateDashboard } from "../../../components/TemplateDashboard";
@@ -8,6 +15,9 @@ import { v4 as uuidV4 } from "uuid";
 import { supabase } from "../../../database/supabaseClient";
 import { useEffect, useState } from "react";
 import { downloadImage } from "../../../services/members/downloadAvatar";
+import { MemberFormFirstStep } from "../../../components/MemberForm/MemberFormFirstStep";
+import { MemberFormSecondStep } from "../../../components/MemberForm/MemberFormSecondStep";
+import { MemberFormThirdStep } from "../../../components/MemberForm/MemberFormThirdStep";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { data } = await api.get(`/api/members/${context.params?.id}`);
@@ -27,6 +37,9 @@ type MemberEditProps = {
 
 export default function MemberEdit({ member }: MemberEditProps) {
   const [avatar, setAvatar] = useState<string>();
+  const [tabIndex, setTabIndex] = useState(0);
+
+  const [memberToUpdate, setMemberToUpdate] = useState(member);
 
   useEffect(() => {
     async function loadAvatar() {
@@ -45,6 +58,15 @@ export default function MemberEdit({ member }: MemberEditProps) {
 
   function onAvatarUpload(avatar: File) {
     asyncUploadAvatar(avatar);
+  }
+
+  function nextStep() {
+    setTabIndex(tabIndex + 1);
+  }
+
+  function handleStepChange(index: number) {
+    console.log(member);
+    setTabIndex(index);
   }
 
   async function asyncUploadAvatar(file: File) {
@@ -78,12 +100,52 @@ export default function MemberEdit({ member }: MemberEditProps) {
     <TemplateDashboard>
       <Heading>Editar</Heading>
 
-      <AvatarPic
+      {/* <AvatarPic
         size={"2xl"}
         name={member.name}
         onUpload={onAvatarUpload}
         src={avatar}
-      />
+      /> */}
+
+      <Heading my="4">Novo Membro</Heading>
+
+      <Tabs
+        index={tabIndex}
+        isFitted
+        variant="enclosed"
+        onChange={handleStepChange}
+      >
+        <TabList mb="1em">
+          <Tab>Passo 1</Tab>
+          <Tab>Passo 2</Tab>
+          <Tab>Passo 3</Tab>
+        </TabList>
+        <TabPanels>
+          <TabPanel>
+            <MemberFormFirstStep
+              member={memberToUpdate}
+              setMember={setMemberToUpdate}
+              nextStep={nextStep}
+            />
+          </TabPanel>
+          <TabPanel>
+            <MemberFormSecondStep
+              member={memberToUpdate}
+              setMember={setMemberToUpdate}
+              nextStep={nextStep}
+            />
+          </TabPanel>
+          <TabPanel>
+            <MemberFormThirdStep
+              member={memberToUpdate}
+              setMember={setMemberToUpdate}
+              onFinish={() => {
+                console.log(memberToUpdate);
+              }}
+            />
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
     </TemplateDashboard>
   );
 }

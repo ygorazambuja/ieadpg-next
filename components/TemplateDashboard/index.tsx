@@ -10,6 +10,7 @@ import { FiHome, FiUsers, FiGift } from "react-icons/fi";
 import { IconType } from "react-icons";
 import { MobileNav } from "../MobileNav";
 import { SidebarContent } from "../SideBarContent";
+import { Nav } from "../NavBar";
 
 interface LinkItemProps {
   name: string;
@@ -29,6 +30,7 @@ export function TemplateDashboard({ children }: { children: ReactNode }) {
 
   return (
     <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
+      <Nav />
       <SidebarContent
         LinkItems={linkItems}
         onClose={() => onClose}

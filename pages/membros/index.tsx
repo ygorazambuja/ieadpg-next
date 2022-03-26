@@ -9,7 +9,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { FiFilter, FiPlus, FiUpload } from "react-icons/fi";
 import { MemberImportSidebar } from "../../components/MemberImportSidebar";
 import { MemberListTile } from "../../components/MemberListTile";
@@ -42,7 +42,6 @@ export default function MembersPage({ members }: MembersPageProps) {
   const [loading, setLoading] = useState(false);
 
   const refreshData = async () => {
-    console.log("refreshData");
     return await router.replace(router.asPath);
   };
 

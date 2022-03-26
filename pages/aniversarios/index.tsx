@@ -6,21 +6,19 @@ import {
   AccordionPanel,
   Badge,
   Box,
-  Button,
   Heading,
-  useColorMode,
 } from "@chakra-ui/react";
 import { GetServerSidePropsContext } from "next";
 import { useCallback, useEffect, useState } from "react";
 import { MemberListTile } from "../../components/MemberListTile";
 import { TemplateDashboard } from "../../components/TemplateDashboard";
+import { supabase } from "../../database/supabaseClient";
 import { Member } from "../../entities/member";
-import { api } from "../../services/api";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const { data } = await api.get("/api/members");
+  const { data } = await supabase.from("members").select("*");
 
-  const members = data.data;
+  const members = data;
 
   return {
     props: {
@@ -65,9 +63,7 @@ export default function BirthDays({ members }: BirthDaysProps) {
 
     updatedMonths.forEach((month) => {
       month.birthDays = members.filter((member) => {
-        if (memberMonthBirthday(month.id, member)) {
-          return member;
-        }
+        if (memberMonthBirthday(month.id, member)) return member;
       });
     });
 
@@ -78,13 +74,9 @@ export default function BirthDays({ members }: BirthDaysProps) {
     buildBirthdaysPerMonth();
   }, [members, buildBirthdaysPerMonth]);
 
-  const { toggleColorMode } = useColorMode();
-
   return (
     <TemplateDashboard>
       <Heading pb={10}>Aniversarios</Heading>
-
-      <Button onClick={toggleColorMode}>Oi</Button>
 
       <Accordion>
         {months.length > 0 &&

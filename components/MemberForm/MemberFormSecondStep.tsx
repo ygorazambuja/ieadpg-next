@@ -39,7 +39,9 @@ export const MemberFormSecondStep: React.FC<MemberFormSecondStepProps> = ({
     watch,
     formState: { errors },
     handleSubmit,
-  } = useForm();
+  } = useForm({
+    defaultValues: member,
+  });
 
   const [states, setStates] = useState<State[]>([]);
   const [cities, setCities] = useState<City[]>([]);

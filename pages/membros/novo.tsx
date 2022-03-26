@@ -1,5 +1,4 @@
 import {
-  Button,
   Heading,
   Tab,
   TabList,
@@ -7,8 +6,7 @@ import {
   TabPanels,
   Tabs,
 } from "@chakra-ui/react";
-import { useCallback, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useState } from "react";
 import { MemberFormFirstStep } from "../../components/MemberForm/MemberFormFirstStep";
 import { MemberFormSecondStep } from "../../components/MemberForm/MemberFormSecondStep";
 import { MemberFormThirdStep } from "../../components/MemberForm/MemberFormThirdStep";
