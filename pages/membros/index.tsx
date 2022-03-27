@@ -8,25 +8,29 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
+import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { FiFilter, FiPlus, FiUpload } from "react-icons/fi";
 import { MemberImportSidebar } from "../../components/MemberImportSidebar";
 import { MemberListTile } from "../../components/MemberListTile";
 import { TemplateDashboard } from "../../components/TemplateDashboard";
+import { supabase } from "../../database/supabaseClient";
 import { Member } from "../../entities/member";
 import { api } from "../../services/api";
 import { memberImportFile } from "../../services/members/import";
 
-export async function getServerSideProps() {
-  const address = "api/members";
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const { user, token } = await supabase.auth.api.getUserByCookie(context.req);
 
-  const { data } = await api.get(address);
+  if (token) {
+    supabase.auth.setAuth(token);
+  }
 
-  const { data: members } = data;
+  const { data, error } = await supabase.from("members").select("*");
   return {
     props: {
-      members,
+      members: data,
     },
   };
 }
