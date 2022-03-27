@@ -47,15 +47,16 @@ const LoginPage = () => {
       });
     }
 
-    await asyncFetchProfile(user);
+    if (user) {
+      await asyncFetchProfile(user);
+      toast({
+        status: "success",
+        title: "Login realizado com sucesso",
+        description: "Redirecionando ... ",
+      });
 
-    toast({
-      status: "success",
-      title: "Login realizado com sucesso",
-      description: "Redirecionando ... ",
-    });
-
-    router.push("/");
+      router.push("/");
+    }
   }
 
   async function asyncFetchProfile(user: User) {

@@ -14,7 +14,9 @@ import { supabase } from "../../database/supabaseClient";
 import { Profile } from "../../entities/profile";
 import { downloadImage } from "../../services/members/downloadAvatar";
 
-export function ProfileMenu() {
+import { memo } from "react";
+
+function ProfileMenuComponent() {
   const router = useRouter();
   const [profile, setProfile] = useState<Profile>();
   const [avatarUrl, setAvatarUrl] = useState("");
@@ -83,3 +85,5 @@ export function ProfileMenu() {
     </Menu>
   );
 }
+
+export const ProfileMenu = memo(ProfileMenuComponent);
