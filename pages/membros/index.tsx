@@ -3,31 +3,34 @@ import {
   Flex,
   Heading,
   IconButton,
-  toast,
   Tooltip,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { GetServerSideProps, GetServerSidePropsContext } from "next";
+import { GetServerSidePropsContext } from "next";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FiFilter, FiPlus, FiUpload } from "react-icons/fi";
 import { MemberImportSidebar } from "../../components/MemberImportSidebar";
 import { MemberListTile } from "../../components/MemberListTile";
 import { TemplateDashboard } from "../../components/TemplateDashboard";
 import { supabase } from "../../database/supabaseClient";
 import { Member } from "../../entities/member";
+import { useSupabaseAuth } from "../../hooks/useSupabaseAuth";
 import { api } from "../../services/api";
 import { memberImportFile } from "../../services/members/import";
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const { user, token } = await supabase.auth.api.getUserByCookie(context.req);
-
-  if (token) {
-    supabase.auth.setAuth(token);
-  }
-
+export async function getServerSideProps({ req }: GetServerSidePropsContext) {
   const { data, error } = await supabase.from("members").select("*");
+
+  if (error) {
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  }
   return {
     props: {
       members: data,
@@ -40,10 +43,17 @@ type MembersPageProps = {
 };
 
 export default function MembersPage({ members }: MembersPageProps) {
+  const { isAuthenticated } = useSupabaseAuth();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      router.push("/login");
+    }
+  }, [isAuthenticated, router]);
 
   const refreshData = async () => {
     return await router.replace(router.asPath);

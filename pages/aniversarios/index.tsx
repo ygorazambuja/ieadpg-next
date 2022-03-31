@@ -9,26 +9,13 @@ import {
   Heading,
 } from "@chakra-ui/react";
 import { GetServerSidePropsContext } from "next";
-import { useCallback, useEffect, useState } from "react";
 import { MemberListTile } from "../../components/MemberListTile";
 import { TemplateDashboard } from "../../components/TemplateDashboard";
 import { supabase } from "../../database/supabaseClient";
 import { Member } from "../../entities/member";
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const { data } = await supabase.from("members").select("*");
-
-  const members = data;
-
-  return {
-    props: {
-      members,
-    },
-  };
-}
-
 type BirthDaysProps = {
-  members: Member[];
+  months: MonthState[];
 };
 
 type MonthState = {
@@ -52,28 +39,44 @@ const INITIAL_MONTH_STATE: MonthState[] = [
   { id: 12, name: "Dezembro", birthDays: [] },
 ];
 
-export default function BirthDays({ members }: BirthDaysProps) {
-  const [months, setMonths] = useState(INITIAL_MONTH_STATE);
+const buildBirthdaysPerMonth = (members: Member[]) => {
+  const updatedMonths = INITIAL_MONTH_STATE;
 
   const memberMonthBirthday = (month: number, member: Member) =>
     new Date(member.birthDate).getMonth() + 1 === month;
 
-  const buildBirthdaysPerMonth = useCallback(() => {
-    const updatedMonths = INITIAL_MONTH_STATE;
-
-    updatedMonths.forEach((month) => {
-      month.birthDays = members.filter((member) => {
-        if (memberMonthBirthday(month.id, member)) return member;
-      });
+  updatedMonths.forEach((month) => {
+    month.birthDays = members.filter((member) => {
+      if (memberMonthBirthday(month.id, member)) return member;
     });
+  });
 
-    setMonths(months);
-  }, [members, months]);
+  return updatedMonths;
+};
 
-  useEffect(() => {
-    buildBirthdaysPerMonth();
-  }, [members, buildBirthdaysPerMonth]);
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const { data, error } = await supabase.from("members").select("*");
 
+  if (error) {
+    return {
+      props: {
+        redirect: {
+          destination: "/login",
+        },
+      },
+    };
+  }
+
+  const months = buildBirthdaysPerMonth(data);
+
+  return {
+    props: {
+      months,
+    },
+  };
+}
+
+export default function BirthDays({ months }: BirthDaysProps) {
   return (
     <TemplateDashboard>
       <Heading pb={10}>Aniversarios</Heading>

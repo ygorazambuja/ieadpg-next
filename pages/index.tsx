@@ -1,27 +1,35 @@
-import { Heading } from "@chakra-ui/react";
+import { Container, Heading, SimpleGrid } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import { Stat } from "../components/Stat";
 import { TemplateDashboard } from "../components/TemplateDashboard";
+import { useSupabaseAuth } from "../hooks/useSupabaseAuth";
+
+const stats = [
+  { label: "Membros Cadastrados", value: "71,887" },
+  { label: "Aniversariantes do Mês", value: "56.87%" },
+  { label: "Avg. Click Rate", value: "12.87%" },
+];
 
 export default function Home() {
-  const router = useRouter();
+  const { isAuthenticated } = useSupabaseAuth();
 
-  function isAuthenticated() {
-    return true;
-  }
+  const { push } = useRouter();
 
   useEffect(() => {
-    if (!isAuthenticated()) {
-      router.replace("/login");
+    if (!isAuthenticated) {
+      push("/login");
     }
-  }, [router]);
+  }, [isAuthenticated, push]);
 
-  if (isAuthenticated()) {
-    return (
-      <TemplateDashboard>
-        <Heading>Home</Heading>
-      </TemplateDashboard>
-    );
-  }
-  return null;
+  return (
+    <TemplateDashboard>
+      <Heading>Home</Heading>
+      <SimpleGrid columns={{ base: 1, md: 3 }} gap={{ base: "5", md: "6" }}>
+        {stats.map(({ label, value }) => (
+          <Stat key={label} label={label} value={value} />
+        ))}
+      </SimpleGrid>
+    </TemplateDashboard>
+  );
 }
