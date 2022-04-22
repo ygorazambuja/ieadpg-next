@@ -17,7 +17,7 @@ export default function Home() {
   const { push } = useRouter();
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (!isAuthenticated()) {
       push("/login");
     }
   }, [isAuthenticated, push]);
