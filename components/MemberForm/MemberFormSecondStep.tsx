@@ -25,6 +25,7 @@ type City = {
   nome: string;
 };
 type MemberFormSecondStepProps = {
+  // eslint-disable-next-line no-unused-vars
   setMember: (member: Member) => void;
   member: Member;
   nextStep: () => void;
@@ -35,13 +36,7 @@ export const MemberFormSecondStep: React.FC<MemberFormSecondStepProps> = ({
   member,
   nextStep,
 }) => {
-  const {
-    register,
-    watch,
-    formState: { errors },
-    handleSubmit,
-    setValue,
-  } = useForm({
+  const { register, watch, handleSubmit, setValue } = useForm({
     defaultValues: member,
   });
 
