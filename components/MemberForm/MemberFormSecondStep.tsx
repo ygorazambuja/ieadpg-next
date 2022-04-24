@@ -12,7 +12,8 @@ import { useForm } from "react-hook-form";
 import { Member } from "../../entities/member";
 import { MARITAL_STATUS } from "../../shared/constants";
 import { asyncFetchCities, asyncFetchStates } from "../../services/ibge";
-import { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect } from "react";
+import { useIMask } from "react-imask";
 
 type State = {
   id: number;
@@ -39,6 +40,7 @@ export const MemberFormSecondStep: React.FC<MemberFormSecondStepProps> = ({
     watch,
     formState: { errors },
     handleSubmit,
+    setValue,
   } = useForm({
     defaultValues: member,
   });
@@ -84,6 +86,32 @@ export const MemberFormSecondStep: React.FC<MemberFormSecondStepProps> = ({
   function convertCityIdToCityName({ birthCity }) {
     return cities.find((city) => city.id == birthCity)?.nome;
   }
+
+  const { ref: cpfRef } = useIMask(
+    {
+      mask: "000.000.000-00",
+    },
+    {
+      onAccept: (value) => {
+        setValue("cpf", value, {
+          shouldDirty: false,
+        });
+      },
+    }
+  );
+
+  const { ref: voterTitleRef } = useIMask(
+    {
+      mask: "000.000.000",
+    },
+    {
+      onAccept: (value) => {
+        setValue("voterTitle", value, {
+          shouldDirty: false,
+        });
+      },
+    }
+  );
 
   return (
     <>
@@ -135,13 +163,19 @@ export const MemberFormSecondStep: React.FC<MemberFormSecondStepProps> = ({
           <Box width="full">
             <FormControl pt="2">
               <FormLabel>CPF</FormLabel>
-              <Input placeholder="000.000.000-00" {...register("cpf")} />
+              <Input
+                placeholder="000.000.000-00"
+                ref={cpfRef as React.RefObject<HTMLInputElement>}
+              />
             </FormControl>
           </Box>
           <Box width="full">
             <FormControl pt="2">
               <FormLabel>Titulo de Eleitor</FormLabel>
-              <Input placeholder="000.000.000" {...register("voterTitle")} />
+              <Input
+                placeholder="000.000.000"
+                ref={voterTitleRef as React.RefObject<HTMLInputElement>}
+              />
             </FormControl>
           </Box>
         </Stack>

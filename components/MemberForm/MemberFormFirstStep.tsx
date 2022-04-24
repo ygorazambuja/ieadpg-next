@@ -10,18 +10,15 @@ import {
   Select,
   Stack,
 } from "@chakra-ui/react";
-import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Member } from "../../entities/member";
 import { BLOOD_TYPES, EDUCATION_TYPES } from "../../shared/constants";
-
+import { useIMask } from "react-imask";
 type MemberFormFirstStepProps = {
   member: Member;
   setMember: (member: Member) => void;
   nextStep: () => void;
 };
-
-type MemberFormFirstStepFormData = {};
 
 export const MemberFormFirstStep: React.FC<MemberFormFirstStepProps> = ({
   setMember,
@@ -32,15 +29,30 @@ export const MemberFormFirstStep: React.FC<MemberFormFirstStepProps> = ({
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm({
     defaultValues: member,
   });
 
   // @ts-ignore
   function onFormSubmit(values) {
+    console.log(values);
     setMember({ ...member, ...values });
     nextStep();
   }
+
+  const { ref } = useIMask(
+    {
+      mask: "(00) 0 0000-0000",
+    },
+    {
+      onAccept: (value) => {
+        setValue("phoneNumber", value, {
+          shouldDirty: false,
+        });
+      },
+    }
+  );
 
   return (
     <>
@@ -60,7 +72,7 @@ export const MemberFormFirstStep: React.FC<MemberFormFirstStepProps> = ({
             <FormControl pt={"2"}>
               <FormLabel>Data de Nascimento</FormLabel>
               <Input
-                placeholder="00/00/2020"
+                placeholder="10/00/2020"
                 type="date"
                 {...register("birthDate")}
               />
@@ -70,8 +82,8 @@ export const MemberFormFirstStep: React.FC<MemberFormFirstStepProps> = ({
             <FormControl pt={"2"}>
               <FormLabel>Telefone</FormLabel>
               <Input
+                ref={ref as React.RefObject<HTMLInputElement>}
                 placeholder="(99) 9 9999-9999"
-                {...register("phoneNumber")}
               />
             </FormControl>
           </Box>
@@ -89,9 +101,6 @@ export const MemberFormFirstStep: React.FC<MemberFormFirstStepProps> = ({
                 {...register("education")}
               >
                 {EDUCATION_TYPES.map((education, index) => {
-                  console.log({
-                    education: member.education,
-                  });
                   return (
                     <option value={education} key={index}>
                       {education}
