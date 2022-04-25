@@ -16,6 +16,7 @@ import { BLOOD_TYPES, EDUCATION_TYPES } from "../../shared/constants";
 import { useIMask } from "react-imask";
 type MemberFormFirstStepProps = {
   member: Member;
+  // eslint-disable-next-line no-unused-vars
   setMember: (member: Member) => void;
   nextStep: () => void;
 };

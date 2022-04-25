@@ -3,12 +3,12 @@ import { Avatar, AvatarProps, Box } from "@chakra-ui/react";
 type AvatarPicProps = {
   name: string;
   url?: string;
+  // eslint-disable-next-line no-unused-vars
   onUpload?: (file: File) => void;
 } & AvatarProps;
 
 export const AvatarPic: React.FC<AvatarPicProps> = ({
   name,
-  url,
   onUpload,
   ...rest
 }) => {

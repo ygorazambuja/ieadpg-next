@@ -6,14 +6,14 @@ function MagicLinkPage() {
   const router = useRouter();
 
   useEffect(() => {
-    new Promise((resolve, reject) => {
+    new Promise((resolve) => {
       setTimeout(() => {
         console.log("Loading...");
         router.replace("/");
         resolve("done");
       }, 2000);
     });
-  }, []);
+  }, [router]);
 
   return (
     <Box h={"100vh"}>

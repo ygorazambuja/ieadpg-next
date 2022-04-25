@@ -7,7 +7,7 @@ export default async function handler(
 ) {
   const member = request.body;
 
-  const { data, error } = await supabase.from("members").insert(member);
+  const { data } = await supabase.from("members").insert(member);
 
   return response.status(200).json({ data });
 }

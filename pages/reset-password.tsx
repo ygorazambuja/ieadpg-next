@@ -13,7 +13,7 @@ import { supabase } from "../database/supabaseClient";
 
 export default function ResetPassword() {
   const {
-    formState: { errors, isSubmitting },
+    formState: { errors },
     handleSubmit,
     register,
   } = useForm();
@@ -22,7 +22,7 @@ export default function ResetPassword() {
 
   // @ts-ignore
   async function onFormSubmit(values) {
-    const { user, error } = await supabase.auth.update({
+    const { error } = await supabase.auth.update({
       email: "ygorazambuja@gmail.com",
       password: values.password,
     });

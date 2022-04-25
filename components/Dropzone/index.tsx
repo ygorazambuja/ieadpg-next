@@ -8,6 +8,7 @@ import styles from "./styles.module.css";
 type DropzoneProps = {
   file?: File;
   permittedMimeTypes: string[];
+  // eslint-disable-next-line no-unused-vars
   setFile: (file: File) => void;
 };
 

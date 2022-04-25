@@ -8,12 +8,12 @@ import {
   DrawerHeader,
   DrawerOverlay,
 } from "@chakra-ui/react";
-import { useRef } from "react";
 import { DOCX_MIMETYPE, DOC_MIMETYPE } from "../../shared/constants";
 import { Dropzone } from "../Dropzone";
 
 type MemberImportSidebarProps = {
   file?: File;
+  // eslint-disable-next-line no-unused-vars
   setFile: (file: File) => void;
   isOpen: boolean;
   onClose: () => void;
@@ -29,8 +29,6 @@ export const MemberImportSidebar: React.FC<MemberImportSidebarProps> = ({
   handleUploadClick,
   loading,
 }) => {
-  const btnRef = useRef();
-
   return (
     <Drawer isOpen={isOpen} placement="right" onClose={onClose}>
       <DrawerOverlay />

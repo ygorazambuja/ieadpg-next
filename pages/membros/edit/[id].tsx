@@ -7,7 +7,6 @@ import {
   Tabs,
 } from "@chakra-ui/react";
 import { GetServerSidePropsContext } from "next";
-import { AvatarPic } from "../../../components/AvatarPic";
 import { TemplateDashboard } from "../../../components/TemplateDashboard";
 import { Member } from "../../../entities/member";
 import { api } from "../../../services/api";
@@ -18,6 +17,7 @@ import { downloadImage } from "../../../services/members/downloadAvatar";
 import { MemberFormFirstStep } from "../../../components/MemberForm/MemberFormFirstStep";
 import { MemberFormSecondStep } from "../../../components/MemberForm/MemberFormSecondStep";
 import { MemberFormThirdStep } from "../../../components/MemberForm/MemberFormThirdStep";
+import { AvatarPic } from "../../../components/AvatarPic";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { data } = await api.get(`/api/members/${context.params?.id}`);
@@ -87,7 +87,7 @@ export default function MemberEdit({ member }: MemberEditProps) {
   }
 
   async function asyncHandleUpsertMember(Key: string) {
-    const { data, error } = await supabase.from("members").upsert(
+    await supabase.from("members").upsert(
       {
         ...member,
         avatar_url: Key,
@@ -100,12 +100,12 @@ export default function MemberEdit({ member }: MemberEditProps) {
     <TemplateDashboard>
       <Heading>Editar</Heading>
 
-      {/* <AvatarPic
+      <AvatarPic
         size={"2xl"}
         name={member.name}
         onUpload={onAvatarUpload}
         src={avatar}
-      /> */}
+      />
 
       <Heading my="4">Novo Membro</Heading>
 

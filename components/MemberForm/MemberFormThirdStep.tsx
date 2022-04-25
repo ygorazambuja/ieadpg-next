@@ -1,11 +1,11 @@
-import { Avatar, Box, Button, Divider, Stack } from "@chakra-ui/react";
-import { useState } from "react";
+import { Box, Button, Divider, Stack } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { Member } from "../../entities/member";
 import { AvatarPic } from "../AvatarPic";
 
 type MemberFormThirdStepProps = {
   member: Member;
+  // eslint-disable-next-line no-unused-vars
   setMember: (member: Member) => void;
   onFinish: () => void;
 };
@@ -15,7 +15,7 @@ export const MemberFormThirdStep: React.FC<MemberFormThirdStepProps> = ({
   onFinish,
   setMember,
 }) => {
-  const { handleSubmit, register } = useForm({
+  const { handleSubmit } = useForm({
     defaultValues: member,
   });
   // @ts-ignore

@@ -16,5 +16,5 @@ export default async function handler(
     return response.status(500).json({ error });
   }
 
-  return response.status(200).json({ message: "message" });
+  return response.status(200).json({ data });
 }

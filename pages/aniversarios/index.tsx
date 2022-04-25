@@ -8,7 +8,6 @@ import {
   Box,
   Heading,
 } from "@chakra-ui/react";
-import { GetServerSidePropsContext } from "next";
 import { MemberListTile } from "../../components/MemberListTile";
 import { TemplateDashboard } from "../../components/TemplateDashboard";
 import { supabase } from "../../database/supabaseClient";
@@ -54,7 +53,7 @@ const buildBirthdaysPerMonth = (members: Member[]) => {
   return updatedMonths;
 };
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
+export async function getServerSideProps() {
   const { data, error } = await supabase.from("members").select("*");
 
   if (error) {

@@ -29,7 +29,7 @@ export default function NewMember() {
   }
 
   async function addNewMember() {
-    const { data, error } = await supabase.from("members").insert(member);
+    await supabase.from("members").insert(member);
   }
 
   return (

@@ -1,12 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { User } from "@supabase/supabase-js";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { supabase } from "../../database/supabaseClient";
-
-type Data = {
-  user: User;
-};
 
 export default async function handler(
   req: NextApiRequest,

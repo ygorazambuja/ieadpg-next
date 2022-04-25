@@ -16,7 +16,7 @@ export default function ForgotMyPassword() {
   const {
     handleSubmit,
     register,
-    formState: { errors, isSubmitting },
+    formState: { isSubmitting },
   } = useForm();
 
   const toast = useToast();

@@ -7,7 +7,6 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { GetServerSidePropsContext } from "next";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { FiFilter, FiPlus, FiUpload } from "react-icons/fi";
@@ -20,7 +19,7 @@ import { useSupabaseAuth } from "../../hooks/useSupabaseAuth";
 import { api } from "../../services/api";
 import { memberImportFile } from "../../services/members/import";
 
-export async function getServerSideProps({ req }: GetServerSidePropsContext) {
+export async function getServerSideProps() {
   const { data, error } = await supabase.from("members").select("*");
 
   if (error) {

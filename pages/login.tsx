@@ -9,10 +9,9 @@ import {
   Flex,
   Text,
   FormErrorMessage,
-  Heading,
   useToast,
 } from "@chakra-ui/react";
-import { User, UserCredentials } from "@supabase/supabase-js";
+import { User } from "@supabase/supabase-js";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
