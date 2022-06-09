@@ -10,11 +10,16 @@ type MagazinesProps = {
 export default function Magazines({ magazines }: MagazinesProps) {
   return (
     <TemplateDashboard>
-      <Heading my={5}>Revistas</Heading>
+      <Heading mb={5}>Revistas</Heading>
 
       {magazines.map((magazine) => (
         <Link href={`/ebd/revistas/${magazine.id}`} passHref key={magazine.id}>
-          <Box p={5} shadow="md" borderWidth="1px">
+          <Box
+            p={5}
+            shadow="md"
+            borderWidth="1px"
+            style={{ cursor: "pointer" }}
+          >
             <Heading fontSize="xl">{magazine.name}</Heading>
           </Box>
         </Link>

@@ -12,7 +12,7 @@ type MagazineIdProps = {
 export default function MagazineId({ magazine }: MagazineIdProps) {
   return (
     <TemplateDashboard>
-      <Heading>Revista</Heading>
+      <Heading mb="5">{magazine.name}</Heading>
 
       {magazine.lessons?.map((lesson) => (
         <Link key={lesson.id} passHref href={`/ebd/licoes/${lesson.id}`}>
@@ -35,8 +35,6 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     .single();
 
   if (error) return;
-
-  console.log(data);
 
   return {
     props: { magazine: data },

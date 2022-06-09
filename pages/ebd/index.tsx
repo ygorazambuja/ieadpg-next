@@ -5,9 +5,7 @@ import { TemplateDashboard } from "../../components/TemplateDashboard";
 export default function index() {
   return (
     <TemplateDashboard>
-      {/* <MenuItem>Account Settings</MenuItem> */}
-
-      <Heading>EBD</Heading>
+      <Heading mb="5">EBD</Heading>
 
       <Link href={"/ebd/revistas"} passHref>
         <Box p={5} my={5} shadow="md" borderWidth="1px">
