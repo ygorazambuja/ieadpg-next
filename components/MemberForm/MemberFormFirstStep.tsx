@@ -19,7 +19,6 @@ import {
 } from "../../shared/constants";
 // import { useIMask } from "react-imask";
 import { removeSpecialCharacters } from "../../shared/utils/removeSpecialCharacters";
-import { useEffect } from "react";
 type MemberFormFirstStepProps = {
   member: Member;
   // eslint-disable-next-line no-unused-vars
@@ -36,7 +35,6 @@ export const MemberFormFirstStep: React.FC<MemberFormFirstStepProps> = ({
     register,
     handleSubmit,
     formState: { errors },
-    getValues,
   } = useForm({
     defaultValues: {
       ...member,
@@ -67,10 +65,6 @@ export const MemberFormFirstStep: React.FC<MemberFormFirstStepProps> = ({
   //     },
   //   }
   // );
-
-  useEffect(() => {
-    console.log(getValues());
-  }, [member]);
 
   return (
     <>

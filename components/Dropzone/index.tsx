@@ -14,6 +14,7 @@ type DropzoneProps = {
 
 export function Dropzone({ file, permittedMimeTypes, setFile }: DropzoneProps) {
   const onDrop = useCallback(
+    // @ts-ignore
     (acceptedFiles) => {
       if (acceptedFiles.length > 0) {
         const [seletecFile] = acceptedFiles;
@@ -27,6 +28,7 @@ export function Dropzone({ file, permittedMimeTypes, setFile }: DropzoneProps) {
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
+    // @ts-ignore
     accept: permittedMimeTypes?.join(","),
   });
 

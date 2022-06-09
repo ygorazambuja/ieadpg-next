@@ -47,9 +47,9 @@ export const MemberImportSidebar: React.FC<MemberImportSidebarProps> = ({
         <DrawerFooter>
           <Button
             colorScheme="blue"
-            isFullWidth
             onClick={handleUploadClick}
             isLoading={loading}
+            width="100%"
           >
             Enviar
           </Button>
