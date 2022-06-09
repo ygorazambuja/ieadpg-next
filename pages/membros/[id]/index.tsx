@@ -46,13 +46,16 @@ export default function MemberDetails({ member }: MemberDetailsProps) {
 
       <Stack direction={["column", "row"]}>
         <Box width={"full"} py="2">
-          Telefone: {member.phoneNumber}
+          <strong>Telefone: </strong>
+          <span>{member.phoneNumber}</span>
         </Box>
         <Box width={"full"} py="2">
-          Nascimento: {member.birthDate}
+          <strong>Nascimento: </strong>
+          <span>{member.birthDate}</span>
         </Box>
         <Box width={"full"} py="2">
-          Email: {member.email}
+          <strong>Email: </strong>
+          <span>{member.email}</span>
         </Box>
       </Stack>
 
@@ -60,10 +63,12 @@ export default function MemberDetails({ member }: MemberDetailsProps) {
 
       <Stack direction={["column", "row"]}>
         <Box width={"full"} py="2">
-          Pai: {member.fatherName}
+          <strong>Pai: </strong>
+          <span>{member.fatherName}</span>
         </Box>
         <Box width={"full"} py="2">
-          Mãe: {member.motherName}
+          <strong>Mãe: </strong>
+          <span>{member.motherName}</span>
         </Box>
       </Stack>
 
@@ -82,13 +87,16 @@ export default function MemberDetails({ member }: MemberDetailsProps) {
 
       <Stack direction={["column", "row"]}>
         <Box width={"full"} py="2">
-          Congregação: {member.congregationPlace}
+          <strong>Congregação: </strong>
+          <span>{member.congregationPlace}</span>
         </Box>
         <Box width={"full"} py="2">
-          Cargo: {member.role}
+          <strong>Cargo: </strong>
+          <span>{member.role}</span>
         </Box>
         <Box width={"full"} py="2">
-          Data de Batismo: {member.baptismDate}
+          <strong>Data de Batismo: </strong>
+          <span>{member.baptismDate}</span>
         </Box>
       </Stack>
 
@@ -96,33 +104,44 @@ export default function MemberDetails({ member }: MemberDetailsProps) {
 
       <Stack direction={["column", "row"]}>
         <Box width={"full"} py="2">
-          Estado Civil: {member.civilState}
+          <strong>Estado Civil:</strong>
+          <span>{member.civilState}</span>
         </Box>
         <Box width={"full"} py="2">
-          Fator RH: {member.bloodType}
+          <strong>Fator RH: </strong>
+          <span>{member.bloodType}</span>
         </Box>
         <Box width={"full"} py="2">
-          Escolaridade: {member.education}
+          <strong>Escolaridade: </strong>
+          <span>{member.education}</span>
         </Box>
         <Box width={"full"} py="2">
-          Endereço: {member.address}
+          <strong>Endereço: </strong>
+          <span>{member.address}</span>
         </Box>
-        <Box width={"full"} py="2">
-          Conjugue: {member.spouseName}
-        </Box>
+        {member.spouseName?.length > 0 && (
+          <Box width={"full"} py="2">
+            <strong>Conjugue: </strong>
+            <span>{member.spouseName}</span>
+          </Box>
+        )}
       </Stack>
 
       <Divider my="2" />
 
       <Stack direction={["column", "row"]} py="2">
-        <Box width={"full"}>RG: {member.rg}</Box>
-        <Box width={"full"}>Data de Emissão: {member.rgEmissionDate}</Box>
-        <Box width={"full"}>CPF: {member.cpf}</Box>
-      </Stack>
-      <Stack direction={["column", "row"]} py="2">
-        <Box width={"full"}>Nº Titúlo: {member.voterTitle}</Box>
-        <Box width={"full"}>Zona Eleitoral: {member.voterZone}</Box>
-        <Box width={"full"}>Sessão: {member.voterSession}</Box>
+        <Box width={"full"}>
+          <strong>RG: </strong>
+          <span>{member.rg}</span>
+        </Box>
+        <Box width={"full"}>
+          <strong>Data de Emissão: </strong>
+          <span>{member.rgEmissionDate}</span>
+        </Box>
+        <Box width={"full"}>
+          <strong>CPF: </strong>
+          <span>{member.cpf}</span>
+        </Box>
       </Stack>
       <Divider my="2" />
     </TemplateDashboard>

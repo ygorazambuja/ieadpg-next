@@ -5,6 +5,7 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
+  useToast,
 } from "@chakra-ui/react";
 import { GetServerSidePropsContext } from "next";
 import { TemplateDashboard } from "../../../components/TemplateDashboard";
@@ -19,6 +20,7 @@ import { MemberFormSecondStep } from "../../../components/MemberForm/MemberFormS
 import { MemberFormThirdStep } from "../../../components/MemberForm/MemberFormThirdStep";
 import { AvatarPic } from "../../../components/AvatarPic";
 import { convertStringToPascalCase } from "../../../shared/utils/convertStringToPascalCase";
+import { useRouter } from "next/router";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { data } = await api.get(`/api/members/${context.params?.id}`);
@@ -61,11 +63,14 @@ export default function MemberEdit({ member }: MemberEditProps) {
     loadAvatar();
   }, [member.avatar_url]);
 
-  const onAvatarUpload = (avatar: File) => asyncUploadAvatar(avatar);
-
   const nextStep = () => setTabIndex(tabIndex + 1);
 
   const handleStepChange = (index: number) => setTabIndex(index);
+
+  const onAvatarUpload = (avatar: File) => asyncUploadAvatar(avatar);
+
+  const toast = useToast();
+  const { push } = useRouter();
 
   async function asyncUploadAvatar(file: File) {
     const fileExtension = file.name.split(".").pop();
@@ -80,23 +85,63 @@ export default function MemberEdit({ member }: MemberEditProps) {
     }
 
     if (data) {
-      await asyncHandleUpsertMember(filePath);
+      await asyncHandleUpsertMemberAvatar(filePath);
     }
   }
 
-  async function asyncHandleUpsertMember(Key: string) {
-    await supabase.from("members").upsert(
-      {
-        ...member,
-        avatar_url: Key,
-      },
-      { returning: "minimal" }
-    );
+  async function asyncHandleUpsertMemberAvatar(Key: string) {
+    try {
+      await supabase.from("members").upsert(
+        {
+          ...member,
+          avatar_url: Key,
+        },
+        { returning: "minimal" }
+      );
+
+      toast({
+        title: "Sucesso",
+        description: "Membro atualizado com sucesso",
+        status: "success",
+      });
+      push(`/membros/${member.id}`);
+    } catch (error) {
+      toast({
+        title: "Erro",
+        description: "Erro ao atualizar membro",
+        status: "error",
+      });
+    }
   }
+
+  const handleMemberUpdate = async (member: Member) => {
+    try {
+      await supabase.from("members").upsert(
+        {
+          ...member,
+          education: convertStringToPascalCase(member.education.trim()),
+          civilState: convertStringToPascalCase(member.civilState.trim()),
+        },
+        { returning: "minimal" }
+      );
+
+      toast({
+        title: "Sucesso",
+        description: "Membro atualizado com sucesso",
+        status: "success",
+      });
+    } catch (error) {
+      toast({
+        title: "Erro",
+        description: "Erro ao atualizar membro",
+        status: "error",
+      });
+    }
+  };
 
   return (
     <TemplateDashboard>
-      <Heading>Editar</Heading>
+      <Heading my={4}>Editar</Heading>
 
       <AvatarPic
         size={"2xl"}
@@ -104,8 +149,6 @@ export default function MemberEdit({ member }: MemberEditProps) {
         onUpload={onAvatarUpload}
         src={avatar}
       />
-
-      <Heading my="4">Novo Membro</Heading>
 
       <Tabs
         index={tabIndex}
@@ -137,9 +180,7 @@ export default function MemberEdit({ member }: MemberEditProps) {
             <MemberFormThirdStep
               member={memberToUpdate}
               setMember={setMemberToUpdate}
-              onFinish={() => {
-                console.log(memberToUpdate);
-              }}
+              onFinish={() => handleMemberUpdate(memberToUpdate)}
             />
           </TabPanel>
         </TabPanels>

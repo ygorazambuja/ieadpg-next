@@ -32,7 +32,12 @@ export const AvatarPic: React.FC<AvatarPicProps> = ({
 
   return (
     <Box>
-      <Avatar name={name} {...rest} onClick={handleOpenFileUpload}></Avatar>
+      <Avatar
+        cursor={"pointer"}
+        name={name}
+        {...rest}
+        onClick={handleOpenFileUpload}
+      />
     </Box>
   );
 };

@@ -78,8 +78,6 @@ function ProfileMenuComponent() {
         </Center>
         <br />
         <MenuDivider />
-        {/* <MenuItem>Your Servers</MenuItem> */}
-        {/* <MenuItem>Account Settings</MenuItem> */}
         <MenuItem onClick={doLogout}>Logout</MenuItem>
       </MenuList>
     </Menu>

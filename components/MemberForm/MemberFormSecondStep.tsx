@@ -6,19 +6,15 @@ import {
   FormLabel,
   Input,
   Select,
+  Spinner,
   Stack,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { Member } from "../../entities/member";
-import { MARITAL_STATUS } from "../../shared/constants";
-import { asyncFetchCities, asyncFetchStates } from "../../services/ibge";
+import { BRAZILIAN_STATES, MARITAL_STATUS } from "../../shared/constants";
+import { asyncFetchCities } from "../../services/ibge";
 import React, { useState, useCallback, useEffect } from "react";
-import { useIMask } from "react-imask";
-
-type State = {
-  id: number;
-  nome: string;
-};
+import { converStateNameToId } from "../../shared/utils/convertStateNameToId";
 
 type City = {
   id: number;
@@ -40,25 +36,26 @@ export const MemberFormSecondStep: React.FC<MemberFormSecondStepProps> = ({
     defaultValues: member,
   });
 
-  const [states, setStates] = useState<State[]>([]);
   const [cities, setCities] = useState<City[]>([]);
-
-  const fetchStates = useCallback(async () => {
-    const data = await asyncFetchStates();
-    setStates(data);
-  }, []);
+  const [loading, setLoading] = useState(false);
 
   const observableState = watch("birthState");
 
   const fetchCities = useCallback(async () => {
-    const data = await asyncFetchCities(watch("birthState"));
+    setLoading(true);
+    try {
+      const convertedStateNameToId = converStateNameToId(observableState);
+      const data = await asyncFetchCities(convertedStateNameToId);
+      setCities(data);
 
-    setCities(data);
-  }, [watch]);
-
-  useEffect(() => {
-    fetchStates();
-  }, [fetchStates]);
+      if (member.birthCity) {
+        setValue("birthCity", member.birthCity);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    setLoading(false);
+  }, [observableState, setValue, member.birthCity]);
 
   useEffect(() => {
     if (observableState) {
@@ -68,9 +65,6 @@ export const MemberFormSecondStep: React.FC<MemberFormSecondStepProps> = ({
 
   // @ts-ignore
   function onFormSubmit(values) {
-    values.birthState = convertStateIdToStateName(values);
-    values.birthCity = convertCityIdToCityName(values);
-
     setMember({
       ...member,
       fatherName: values.fatherName,
@@ -88,40 +82,6 @@ export const MemberFormSecondStep: React.FC<MemberFormSecondStepProps> = ({
     });
     nextStep();
   }
-  // @ts-ignore
-  function convertStateIdToStateName({ birthState }) {
-    return states.find((state) => state.id == birthState)?.nome;
-  }
-  // @ts-ignore
-  function convertCityIdToCityName({ birthCity }) {
-    return cities.find((city) => city.id == birthCity)?.nome;
-  }
-
-  const { ref: cpfRef } = useIMask(
-    {
-      mask: "000.000.000-00",
-    },
-    {
-      onAccept: (value) => {
-        setValue("cpf", value, {
-          shouldDirty: false,
-        });
-      },
-    }
-  );
-
-  // const { ref: voterTitleRef } = useIMask(
-  //   {
-  //     mask: "000.000.000",
-  //   },
-  //   {
-  //     onAccept: (value) => {
-  //       setValue("voterTitle", value, {
-  //         shouldDirty: false,
-  //       });
-  //     },
-  //   }
-  // );
 
   return (
     <>
@@ -175,34 +135,12 @@ export const MemberFormSecondStep: React.FC<MemberFormSecondStepProps> = ({
               <FormLabel>CPF</FormLabel>
               <Input
                 placeholder="000.000.000-00"
-                ref={cpfRef as React.RefObject<HTMLInputElement>}
+                {...register("cpf")}
+                // ref={cpfRef as React.RefObject<HTMLInputElement>}
               />
             </FormControl>
           </Box>
-          {/* <Box width="full">
-            <FormControl pt="2">
-              <FormLabel>Titulo de Eleitor</FormLabel>
-              <Input
-                placeholder="000.000.000"
-                ref={voterTitleRef as React.RefObject<HTMLInputElement>}
-              />
-            </FormControl>
-          </Box> */}
         </Stack>
-        {/* <Stack direction={["column", "row"]}>
-          <Box width="full">
-            <FormControl pt="2">
-              <FormLabel>Zona Eleitoral</FormLabel>
-              <Input placeholder="0000" {...register("voterZone")} />
-            </FormControl>
-          </Box>
-          <Box width="full">
-            <FormControl pt="2">
-              <FormLabel>Sessão</FormLabel>
-              <Input placeholder="000" {...register("voterSession")} />
-            </FormControl>
-          </Box>
-        </Stack> */}
 
         <Divider py="2" />
 
@@ -212,30 +150,32 @@ export const MemberFormSecondStep: React.FC<MemberFormSecondStepProps> = ({
               <FormLabel htmlFor="state">Estado</FormLabel>
               <Select
                 placeholder="Selecione o Estado"
-                // value={form.birthState}
                 {...register("birthState")}
-                // onChange={({ target }) =>
-                // setForm({ ...form, birthState: String(target.value) })
-                // }
               >
-                {states.map((state) => (
-                  <option key={state.id} value={state.id}>
-                    {state.nome}
-                  </option>
-                ))}
+                {BRAZILIAN_STATES.map((state) => {
+                  return (
+                    <option key={state.id} value={state.nome}>
+                      {state.nome}
+                    </option>
+                  );
+                })}
               </Select>
             </FormControl>
           </Box>
           <Box width="full">
             <FormControl pt="2">
               <FormLabel htmlFor="city">Cidade</FormLabel>
-              <Select disabled={!cities?.length} {...register("birthCity")}>
-                {cities?.map((city) => (
-                  <option key={city.id} value={city.id}>
-                    {city.nome}
-                  </option>
-                ))}
-              </Select>
+              {loading ? (
+                <Spinner />
+              ) : (
+                <Select disabled={!cities?.length} {...register("birthCity")}>
+                  {cities?.map((city) => (
+                    <option key={city.id} value={city.nome}>
+                      {city.nome}
+                    </option>
+                  ))}
+                </Select>
+              )}
             </FormControl>
           </Box>
         </Stack>

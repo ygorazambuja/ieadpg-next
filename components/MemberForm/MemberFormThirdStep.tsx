@@ -18,10 +18,9 @@ export const MemberFormThirdStep: React.FC<MemberFormThirdStepProps> = ({
   const { handleSubmit } = useForm({
     defaultValues: member,
   });
-  // @ts-ignore
-  function onFormSubmit(values) {
-    setMember({ ...member, ...values });
 
+  function onFormSubmit(values: Member) {
+    setMember({ ...member, ...values });
     onFinish();
   }
 

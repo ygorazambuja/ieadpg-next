@@ -13,10 +13,13 @@ import { MemberFormThirdStep } from "../../components/MemberForm/MemberFormThird
 import { TemplateDashboard } from "../../components/TemplateDashboard";
 import { supabase } from "../../database/supabaseClient";
 import { createMember } from "../../entities/member";
+import { useToast } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 
 export default function NewMember() {
   const [member, setMember] = useState(createMember());
-
+  const toast = useToast();
+  const { push } = useRouter();
   const [tabIndex, setTabIndex] = useState(0);
 
   function nextStep() {
@@ -24,12 +27,25 @@ export default function NewMember() {
   }
 
   function handleStepChange(index: number) {
-    console.log(member);
     setTabIndex(index);
   }
 
   async function addNewMember() {
-    await supabase.from("members").insert(member);
+    try {
+      await supabase.from("members").insert(member);
+      toast({
+        title: "Membro cadastrado com sucesso",
+        status: "success",
+        isClosable: true,
+      });
+      push("/membros");
+    } catch (error) {
+      toast({
+        title: "Erro ao cadastrar membro",
+        status: "error",
+        isClosable: true,
+      });
+    }
   }
 
   return (

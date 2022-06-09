@@ -10,7 +10,7 @@ export async function asyncFetchStates() {
   return data;
 }
 
-export async function asyncFetchCities(state: string) {
+export async function asyncFetchCities(state: string | number) {
   const response =
     await axios.get(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${state}/municipios
   `);
@@ -18,17 +18,6 @@ export async function asyncFetchCities(state: string) {
   const { data } = response;
   return data;
 }
-
-type State = {
-  id: number;
-  nome: string;
-  sigla: string;
-};
-
-type City = {
-  id: number;
-  nome: string;
-};
 
 // function convertCitiesToSelectOptions(cities: City[]): Option[] {
 //   return cities

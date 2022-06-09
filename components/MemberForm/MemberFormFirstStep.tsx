@@ -12,8 +12,14 @@ import {
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { Member } from "../../entities/member";
-import { BLOOD_TYPES, EDUCATION_TYPES } from "../../shared/constants";
-import { useIMask } from "react-imask";
+import {
+  BLOOD_TYPES,
+  EDUCATION_TYPES,
+  SUGGESTED_ROLES,
+} from "../../shared/constants";
+// import { useIMask } from "react-imask";
+import { removeSpecialCharacters } from "../../shared/utils/removeSpecialCharacters";
+import { useEffect } from "react";
 type MemberFormFirstStepProps = {
   member: Member;
   // eslint-disable-next-line no-unused-vars
@@ -30,9 +36,12 @@ export const MemberFormFirstStep: React.FC<MemberFormFirstStepProps> = ({
     register,
     handleSubmit,
     formState: { errors },
-    setValue,
+    getValues,
   } = useForm({
-    defaultValues: member,
+    defaultValues: {
+      ...member,
+      phoneNumber: removeSpecialCharacters(member.phoneNumber) || "",
+    },
   });
 
   // @ts-ignore
@@ -41,18 +50,27 @@ export const MemberFormFirstStep: React.FC<MemberFormFirstStepProps> = ({
     nextStep();
   }
 
-  const { ref } = useIMask(
-    {
-      mask: "(00) 0 0000-0000",
-    },
-    {
-      onAccept: (value) => {
-        setValue("phoneNumber", value, {
-          shouldDirty: false,
-        });
-      },
-    }
-  );
+  // const { ref } = useIMask(
+  //   {
+  //     mask: "(00) 0 0000-0000",
+  //   },
+  //   {
+  //     onAccept: (value) => {
+  //       setValue("phoneNumber", value, {
+  //         shouldDirty: false,
+  //       });
+  //     },
+  //     onComplete: (value) => {
+  //       setValue("phoneNumber", value, {
+  //         shouldDirty: false,
+  //       });
+  //     },
+  //   }
+  // );
+
+  useEffect(() => {
+    console.log(getValues());
+  }, [member]);
 
   return (
     <>
@@ -82,8 +100,9 @@ export const MemberFormFirstStep: React.FC<MemberFormFirstStepProps> = ({
             <FormControl pt={"2"}>
               <FormLabel>Telefone</FormLabel>
               <Input
-                ref={ref as React.RefObject<HTMLInputElement>}
+                {...register("phoneNumber", { required: "Campo Obrigatório" })}
                 placeholder="(99) 9 9999-9999"
+                maxLength={11}
               />
             </FormControl>
           </Box>
@@ -128,7 +147,20 @@ export const MemberFormFirstStep: React.FC<MemberFormFirstStepProps> = ({
         <Divider></Divider>
         <FormControl pt={"2"}>
           <FormLabel>Cargo</FormLabel>
-          <Input placeholder="Músico" {...register("role")} />
+          <Input
+            placeholder="Músico"
+            {...register("role")}
+            list="suggestedList"
+          />
+          <datalist id="suggestedList">
+            {SUGGESTED_ROLES.map((role, index) => {
+              return (
+                <option value={role} key={index}>
+                  {role}
+                </option>
+              );
+            })}
+          </datalist>
         </FormControl>
 
         <FormControl pt={"2"}>
