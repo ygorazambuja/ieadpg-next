@@ -76,17 +76,7 @@ export function MemberListTile({ member, refreshData }: MemberListTileProps) {
   }
 
   return (
-    <Box
-      rounded={"lg"}
-      boxShadow="xs"
-      p={"4"}
-      mb={"2"}
-      _hover={{
-        background: "telegram.100",
-        color: "teal.500",
-        cursor: "pointer",
-      }}
-    >
+    <Box rounded={"lg"} boxShadow="md" p={"4"} mb={"2"}>
       <Flex h="60px">
         <Center>
           <Avatar src={avatar} size={"md"} />
@@ -109,6 +99,7 @@ export function MemberListTile({ member, refreshData }: MemberListTileProps) {
               variant="outline"
               icon={<FiInfo />}
               colorScheme={"blue"}
+              marginRight={"2"}
             />
           </Tooltip>
           <Tooltip label="Editar" fontSize={"md"}>
@@ -118,6 +109,7 @@ export function MemberListTile({ member, refreshData }: MemberListTileProps) {
               aria-label="Edit"
               icon={<FiEdit />}
               variant="outline"
+              marginRight={"2"}
             />
           </Tooltip>
           <Tooltip label="Remover" fontSize={"md"}>

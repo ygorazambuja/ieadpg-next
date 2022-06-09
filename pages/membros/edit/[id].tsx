@@ -18,11 +18,16 @@ import { MemberFormFirstStep } from "../../../components/MemberForm/MemberFormFi
 import { MemberFormSecondStep } from "../../../components/MemberForm/MemberFormSecondStep";
 import { MemberFormThirdStep } from "../../../components/MemberForm/MemberFormThirdStep";
 import { AvatarPic } from "../../../components/AvatarPic";
+import { convertStringToPascalCase } from "../../../shared/utils/convertStringToPascalCase";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { data } = await api.get(`/api/members/${context.params?.id}`);
 
-  const member = data.data;
+  const member: Member = {
+    ...data.data,
+    education: convertStringToPascalCase(data.data.education.trim()),
+    civilState: convertStringToPascalCase(data.data.civilState.trim()),
+  };
 
   return {
     props: {
@@ -56,18 +61,11 @@ export default function MemberEdit({ member }: MemberEditProps) {
     loadAvatar();
   }, [member.avatar_url]);
 
-  function onAvatarUpload(avatar: File) {
-    asyncUploadAvatar(avatar);
-  }
+  const onAvatarUpload = (avatar: File) => asyncUploadAvatar(avatar);
 
-  function nextStep() {
-    setTabIndex(tabIndex + 1);
-  }
+  const nextStep = () => setTabIndex(tabIndex + 1);
 
-  function handleStepChange(index: number) {
-    console.log(member);
-    setTabIndex(index);
-  }
+  const handleStepChange = (index: number) => setTabIndex(index);
 
   async function asyncUploadAvatar(file: File) {
     const fileExtension = file.name.split(".").pop();

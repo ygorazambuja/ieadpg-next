@@ -37,7 +37,6 @@ export const MemberFormFirstStep: React.FC<MemberFormFirstStepProps> = ({
 
   // @ts-ignore
   function onFormSubmit(values) {
-    console.log(values);
     setMember({ ...member, ...values });
     nextStep();
   }
@@ -99,7 +98,7 @@ export const MemberFormFirstStep: React.FC<MemberFormFirstStepProps> = ({
               <FormLabel>Escolaridade</FormLabel>
               <Select
                 placeholder="Ensino Fundamental"
-                {...register("education")}
+                {...register("education", {})}
               >
                 {EDUCATION_TYPES.map((education, index) => {
                   return (

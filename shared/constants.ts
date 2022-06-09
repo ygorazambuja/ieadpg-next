@@ -3,13 +3,13 @@ export const DOCX_MIMETYPE =
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
 
 export const EDUCATION_TYPES = [
-  "Ensino Fundamental",
+  "Ensino Fundamental Completo",
   "Ensino Fundamental Incompleto",
-  "Ensino Médio",
+  "Ensino Médio Completo",
   "Ensino Médio Incompleto",
-  "Ensino Superior",
+  "Ensino Superior Completo",
   "Ensino Superior Incompleto",
-  "Pós-Graduação",
+  "Pós-Graduação Completo",
   "Pós-Graduação Incompleto",
 ];
 

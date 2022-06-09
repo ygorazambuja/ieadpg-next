@@ -12,9 +12,7 @@ export default async function handler(
     .limit(1)
     .single();
 
-  if (error) {
-    return response.status(500).json({ error });
-  }
+  if (error) return response.status(500).json({ error });
 
   return response.status(200).json({ data });
 }

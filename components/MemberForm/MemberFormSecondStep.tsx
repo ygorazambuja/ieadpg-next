@@ -70,7 +70,22 @@ export const MemberFormSecondStep: React.FC<MemberFormSecondStepProps> = ({
   function onFormSubmit(values) {
     values.birthState = convertStateIdToStateName(values);
     values.birthCity = convertCityIdToCityName(values);
-    setMember({ ...member, ...values });
+
+    setMember({
+      ...member,
+      fatherName: values.fatherName,
+      motherName: values.motherName,
+      civilState: values.civilState,
+      spouseName: values.spouseName,
+      rg: values.rg,
+      rgEmissionDate: values.rgEmissionDate,
+      cpf: values.cpf,
+      voterTitle: values.voterTitle,
+      voterZone: values.voterZone,
+      voterSession: values.voterSession,
+      birthState: values.birthState,
+      birthCity: values.birthCity,
+    });
     nextStep();
   }
   // @ts-ignore
@@ -95,18 +110,18 @@ export const MemberFormSecondStep: React.FC<MemberFormSecondStepProps> = ({
     }
   );
 
-  const { ref: voterTitleRef } = useIMask(
-    {
-      mask: "000.000.000",
-    },
-    {
-      onAccept: (value) => {
-        setValue("voterTitle", value, {
-          shouldDirty: false,
-        });
-      },
-    }
-  );
+  // const { ref: voterTitleRef } = useIMask(
+  //   {
+  //     mask: "000.000.000",
+  //   },
+  //   {
+  //     onAccept: (value) => {
+  //       setValue("voterTitle", value, {
+  //         shouldDirty: false,
+  //       });
+  //     },
+  //   }
+  // );
 
   return (
     <>
@@ -164,7 +179,7 @@ export const MemberFormSecondStep: React.FC<MemberFormSecondStepProps> = ({
               />
             </FormControl>
           </Box>
-          <Box width="full">
+          {/* <Box width="full">
             <FormControl pt="2">
               <FormLabel>Titulo de Eleitor</FormLabel>
               <Input
@@ -172,9 +187,9 @@ export const MemberFormSecondStep: React.FC<MemberFormSecondStepProps> = ({
                 ref={voterTitleRef as React.RefObject<HTMLInputElement>}
               />
             </FormControl>
-          </Box>
+          </Box> */}
         </Stack>
-        <Stack direction={["column", "row"]}>
+        {/* <Stack direction={["column", "row"]}>
           <Box width="full">
             <FormControl pt="2">
               <FormLabel>Zona Eleitoral</FormLabel>
@@ -187,7 +202,7 @@ export const MemberFormSecondStep: React.FC<MemberFormSecondStepProps> = ({
               <Input placeholder="000" {...register("voterSession")} />
             </FormControl>
           </Box>
-        </Stack>
+        </Stack> */}
 
         <Divider py="2" />
 
