@@ -8,7 +8,7 @@ export default function index() {
       <Heading mb="5">EBD</Heading>
 
       <Link href={"/ebd/revistas"} passHref>
-        <Box p={5} my={5} shadow="md" borderWidth="1px">
+        <Box cursor={"pointer"} p={5} my={5} shadow="md" borderWidth="1px">
           <Heading fontSize="xl">Revistas</Heading>
         </Box>
       </Link>
