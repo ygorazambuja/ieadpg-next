@@ -34,13 +34,7 @@ export default function Magazines({ magazines }: MagazinesProps) {
 
       {magazines.map((magazine) => (
         <Link href={`/ebd/revistas/${magazine.id}`} passHref key={magazine.id}>
-          <Box
-            cursor={"pointer"}
-            p={5}
-            shadow="md"
-            borderWidth="1px"
-            style={{ cursor: "pointer" }}
-          >
+          <Box p={5} shadow="md" borderWidth="1px" cursor={"pointer"}>
             <Heading fontSize="xl">{magazine.name}</Heading>
           </Box>
         </Link>

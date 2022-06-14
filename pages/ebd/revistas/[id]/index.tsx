@@ -40,7 +40,7 @@ export default function MagazineId({ magazine, lessons }: MagazineIdProps) {
 
       {lessons?.map((lesson) => (
         <Link key={lesson.id} passHref href={`/ebd/licoes/${lesson.id}`}>
-          <Box p={5} shadow="md" borderWidth="1px">
+          <Box p={5} shadow="md" borderWidth="1px" cursor={"pointer"}>
             <Heading fontSize="xl">{lesson.title}</Heading>
           </Box>
         </Link>
