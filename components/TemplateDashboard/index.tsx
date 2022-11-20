@@ -23,7 +23,6 @@ const linkItems: Array<LinkItemProps> = [
   { name: "Membros", icon: FiUsers, route: "/membros" },
   { name: "Aniversarios", icon: FiGift, route: "/aniversarios" },
   { name: "Perfil", icon: FiUsers, route: "/profile" },
-  { name: "EBD", icon: FiUsers, route: "/ebd" },
 ];
 
 export function TemplateDashboard({ children }: { children: ReactNode }) {

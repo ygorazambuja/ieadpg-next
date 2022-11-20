@@ -6,21 +6,19 @@ import { Stat } from "../components/Stat";
 import { TemplateDashboard } from "../components/TemplateDashboard";
 import { useSupabaseAuth } from "../hooks/useSupabaseAuth";
 
-import { supabase } from "../database/supabaseClient";
+import { useMembersStore } from "../stores/members";
+import { Member } from "../entities/member";
+import { getMembersForBirthdayCount } from "../services/members/getMembersForBirthdayCount";
+import { buildBirthdaysPerMonth } from "../shared/utils/buildBirthdaysPerMonth";
 
 export async function getServerSideProps() {
-  const { count } = await supabase
-    .from("members")
-    .select("*", { count: "exact" });
+  const { members, count } = await getMembersForBirthdayCount();
 
   const memberCount = {
     label: "Membros Cadastrados",
     value: count,
   };
-  const birthdaysInMonth = {
-    label: "Aniversariantes do Mês",
-    value: "56",
-  };
+
   const newMembers = {
     label: "Novos Membros",
     value: "12",
@@ -29,8 +27,8 @@ export async function getServerSideProps() {
   return {
     props: {
       memberCount,
-      birthdaysInMonth,
       newMembers,
+      members,
     },
   };
 }
@@ -40,21 +38,16 @@ type HomeProps = {
     label: string;
     value: string;
   };
-  birthdaysInMonth: {
-    label: string;
-    value: string;
-  };
+
   newMembers: {
     label: string;
     value: string;
   };
+
+  members: Member[];
 };
 
-export default function Home({
-  memberCount,
-  birthdaysInMonth,
-  newMembers,
-}: HomeProps) {
+export default function Home({ memberCount, newMembers, members }: HomeProps) {
   const { isAuthenticated } = useSupabaseAuth();
 
   const { push } = useRouter();
@@ -64,6 +57,19 @@ export default function Home({
       push("/login");
     }
   }, [isAuthenticated, push]);
+
+  const setBirthdayMembers = useMembersStore(
+    (state) => state.setBirthdayMembers
+  );
+
+  useEffect(() => {
+    const monthBirthdays = buildBirthdaysPerMonth(members);
+    const currentMonth = new Date().getMonth();
+
+    setBirthdayMembers(monthBirthdays[currentMonth].birthDays);
+  }, [setBirthdayMembers, members]);
+
+  const birthdaysInMonth = useMembersStore((state) => state.birthdayMembers);
 
   return (
     <TemplateDashboard>
@@ -78,9 +84,9 @@ export default function Home({
           value={memberCount.value}
         />
         <Stat
-          key={birthdaysInMonth.label}
-          label={birthdaysInMonth.label}
-          value={birthdaysInMonth.value}
+          key={"Aniversariantes do Mês"}
+          label={"Aniversariantes do Mês"}
+          value={String(birthdaysInMonth.length) || "0"}
         />
         <Stat
           key={newMembers.label}

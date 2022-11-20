@@ -31,6 +31,8 @@ export default function NewMember() {
   }
 
   async function addNewMember() {
+    console.log(member);
+
     try {
       await supabase.from("members").insert(member);
       toast({
@@ -40,6 +42,7 @@ export default function NewMember() {
       });
       push("/membros");
     } catch (error) {
+      console.log(error);
       toast({
         title: "Erro ao cadastrar membro",
         status: "error",
