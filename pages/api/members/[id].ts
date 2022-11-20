@@ -7,10 +7,10 @@ export default async function handler(
 ) {
   const method = request.method;
 
-  if (method === "GET") {
+  if (method === "GET" || method === "get") {
     return await handleGetById(request, response);
   }
-  if (method === "DELETE") {
+  if (method === "DELETE" || method === "delete") {
     return await handleDelete(request, response);
   }
 }
@@ -19,22 +19,18 @@ async function handleGetById(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
-  try {
-    const { data, error } = await supabase
-      .from("members")
-      .select("*")
-      .eq("id", request.query.id)
-      .limit(1)
-      .single();
+  const { data, error } = await supabase
+    .from("members")
+    .select("*")
+    .eq("id", request.query.id)
+    .limit(1)
+    .single();
 
-    if (error) {
-      return response.status(500).json({ error });
-    }
-
-    return response.status(200).json({ data });
-  } catch (error) {
+  if (error) {
     return response.status(500).json({ error });
   }
+
+  return response.status(200).json({ data });
 }
 
 async function handleDelete(
