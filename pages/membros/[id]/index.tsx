@@ -1,20 +1,35 @@
 import React, { useEffect, useState } from "react";
-import { GetServerSidePropsContext } from "next";
+import { GetServerSidePropsContext, GetServerSidePropsResult } from "next";
 import { Box, Divider, Heading, Stack } from "@chakra-ui/react";
 import { TemplateDashboard } from "../../../components/TemplateDashboard";
-import { api } from "../../../services/api";
 import { Member } from "../../../entities/member";
 import { AvatarPic } from "../../../components/AvatarPic";
 import { downloadImage } from "../../../services/members/downloadAvatar";
+import { supabase } from "../../../database/supabaseClient";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const id = context.params?.id;
 
-  const { data } = await api.get(`api/members/${id}`);
+  const { data, error } = await supabase
+    .from("members")
+    .select("*")
+    .eq("id", id)
+    .limit(1)
+    .single();
+
+  if (error) {
+    return {
+      notFound: true,
+      redirect: {
+        destination: "/membros",
+        permanent: false,
+      },
+    };
+  }
 
   return {
     props: {
-      member: data.data,
+      member: data,
     },
   };
 }
