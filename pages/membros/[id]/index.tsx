@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { GetServerSidePropsContext, GetServerSidePropsResult } from "next";
+import { GetServerSidePropsContext } from "next";
 import { Box, Divider, Heading, Stack } from "@chakra-ui/react";
 import { TemplateDashboard } from "../../../components/TemplateDashboard";
 import { Member } from "../../../entities/member";
