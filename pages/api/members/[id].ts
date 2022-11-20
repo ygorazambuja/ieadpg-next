@@ -19,18 +19,22 @@ async function handleGetById(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
-  const { data, error } = await supabase
-    .from("members")
-    .select("*")
-    .eq("id", request.query.id)
-    .limit(1)
-    .single();
+  try {
+    const { data, error } = await supabase
+      .from("members")
+      .select("*")
+      .eq("id", request.query.id)
+      .limit(1)
+      .single();
 
-  if (error) {
+    if (error) {
+      return response.status(500).json({ error });
+    }
+
+    return response.status(200).json({ data });
+  } catch (error) {
     return response.status(500).json({ error });
   }
-
-  return response.status(200).json({ data });
 }
 
 async function handleDelete(
