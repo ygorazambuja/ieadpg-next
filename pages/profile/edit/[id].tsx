@@ -1,47 +1,102 @@
-import { Heading } from "@chakra-ui/react";
-import { GetServerSidePropsContext } from "next";
-import { useEffect, useState } from "react";
+import {
+  Button,
+  FormControl,
+  FormLabel,
+  Heading,
+  Input,
+} from "@chakra-ui/react";
+import { useCallback, useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import { AvatarPic } from "../../../components/AvatarPic";
 
 import { TemplateDashboard } from "../../../components/TemplateDashboard";
 import { supabase } from "../../../database/supabaseClient";
-import { Profile } from "../../../entities/profile";
 import { downloadImage } from "../../../services/members/downloadAvatar";
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const id = context.params?.id;
-
-  const { data } = await supabase
-    .from("profiles")
-    .select("*")
-    .eq("user_id", id)
-    .single();
-
-  return {
-    props: {
-      profile: data,
-    },
-  };
-}
-
-type ProfileEditProps = {
-  profile: Profile;
-};
-
-export default function ProfileEdit({ profile }: ProfileEditProps) {
+export default function ProfileEdit() {
   const [avatar, setAvatar] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(true);
+  const [profileData, setProfileData] = useState<any>();
+
+  const { control, handleSubmit, setValue } = useForm({
+    defaultValues: {
+      name: profileData?.name,
+      email: profileData?.email,
+    },
+  });
+
+  const fetchProfile = useCallback(async () => {
+    const userData = await supabase.auth.getUser();
+
+    const { data } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("user", userData?.data?.user?.id)
+      .single();
+
+    setProfileData({ ...userData?.data?.user, ...data });
+
+    setValue("name", profileData?.name);
+    setValue("email", profileData?.email);
+
+    setLoading(false);
+  }, [setValue, profileData?.name, profileData?.email]);
 
   useEffect(() => {
-    if (profile?.avatar_url) {
-      downloadImage(profile.avatar_url).then((avatar) => setAvatar(avatar));
+    fetchProfile();
+  }, [fetchProfile]);
+
+  const onSubmit = (data: any) => {
+    console.log(data);
+  };
+
+  useEffect(() => {
+    if (profileData?.avatar_url) {
+      downloadImage(profileData.avatar_url).then((avatar) => setAvatar(avatar));
     }
-  }, [profile?.avatar_url]);
+  }, [profileData?.avatar_url]);
+
+  const updateAvatar = (avatar: File) => {
+    console.log(avatar);
+  };
 
   return (
-    <TemplateDashboard>
-      <Heading>Edição</Heading>
+    <TemplateDashboard loading={loading}>
+      <Heading mb={8}>Edição</Heading>
 
-      <AvatarPic name={profile?.name} src={avatar}></AvatarPic>
+      <AvatarPic
+        name={profileData?.name}
+        src={avatar}
+        onUpload={updateAvatar}
+      />
+
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Controller
+          name="name"
+          control={control}
+          render={() => (
+            <FormControl pt={4}>
+              <FormLabel>Nome</FormLabel>
+              <Input value={profileData?.name}></Input>
+            </FormControl>
+          )}
+        />
+
+        <Controller
+          control={control}
+          name="email"
+          render={() => (
+            <FormControl pt={4}>
+              <FormLabel>E-mail</FormLabel>
+              <Input disabled value={profileData?.email}></Input>
+            </FormControl>
+          )}
+        />
+
+        <Button my={4} type="submit">
+          Salvar
+        </Button>
+      </form>
     </TemplateDashboard>
   );
 }

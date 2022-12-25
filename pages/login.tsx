@@ -35,7 +35,10 @@ const LoginPage = () => {
   const router = useRouter();
 
   async function onFormSubmit(values: LoginFormData) {
-    const { user, error } = await supabase.auth.signIn(values);
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.signInWithPassword(values);
 
     if (error) {
       return toast({
@@ -62,7 +65,7 @@ const LoginPage = () => {
     const { data, error } = await supabase
       .from("profiles")
       .select("*")
-      .eq("user_id", user.id)
+      .eq("user", user.id)
       .single();
 
     if (error) {

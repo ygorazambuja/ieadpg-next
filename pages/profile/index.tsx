@@ -2,11 +2,18 @@ import { useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
 import { supabase } from "../../database/supabaseClient";
 
-import { User } from "@supabase/supabase-js";
 import { TemplateDashboard } from "../../components/TemplateDashboard";
-import { Avatar, Flex, Heading, IconButton } from "@chakra-ui/react";
+import {
+  Avatar,
+  Flex,
+  FormControl,
+  FormLabel,
+  Heading,
+  IconButton,
+  Input,
+} from "@chakra-ui/react";
 import { FiEdit } from "react-icons/fi";
-import { ListTile } from "../../components/ListTile";
+import { downloadImage } from "../../services/members/downloadAvatar";
 
 export function getServerSideProps() {
   return {
@@ -14,20 +21,32 @@ export function getServerSideProps() {
   };
 }
 
+type User = {
+  id: string;
+  name?: string;
+  email?: string;
+  avatar_url?: string;
+};
+
 export default function Profile() {
   const [profile, setProfile] = useState<User | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
   const { push } = useRouter();
 
   const fetchProfile = useCallback(async () => {
-    const userData = supabase.auth.user();
+    const userData = await supabase.auth.getUser();
 
     const { data } = await supabase
       .from("profiles")
       .select("*")
-      .eq("user_id", userData?.id)
+      .eq("user", userData?.data?.user?.id)
       .single();
 
-    setProfile(data);
+    const avatar_url = await downloadImage(data?.avatar_url);
+
+    setProfile({ ...userData?.data?.user, ...data, avatar_url });
+
+    setLoading(false);
   }, []);
 
   useEffect(() => {
@@ -35,7 +54,7 @@ export default function Profile() {
   }, [fetchProfile]);
 
   return (
-    <TemplateDashboard>
+    <TemplateDashboard loading={loading}>
       <Heading>Perfil</Heading>
 
       <Flex justifyContent={"flex-end"}>
@@ -48,8 +67,17 @@ export default function Profile() {
         />
       </Flex>
 
-      <Avatar name={profile?.email}></Avatar>
-      <ListTile label={"E-mail"} value={profile?.email}></ListTile>
+      <Avatar name={profile?.name} src={profile?.avatar_url}></Avatar>
+
+      <FormControl pt={4}>
+        <FormLabel>Nome</FormLabel>
+        <Input readOnly value={profile?.name}></Input>
+      </FormControl>
+
+      <FormControl pt={4}>
+        <FormLabel>E-mail</FormLabel>
+        <Input readOnly value={profile?.email}></Input>
+      </FormControl>
     </TemplateDashboard>
   );
 }

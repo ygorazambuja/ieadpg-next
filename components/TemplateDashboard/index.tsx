@@ -6,11 +6,12 @@ import {
   DrawerContent,
   useDisclosure,
 } from "@chakra-ui/react";
-import { FiHome, FiUsers, FiGift } from "react-icons/fi";
+import { FiHome, FiUsers, FiGift, FiUserPlus, FiUser } from "react-icons/fi";
 import { IconType } from "react-icons";
 import { MobileNav } from "../MobileNav";
 import { SidebarContent } from "../SideBarContent";
 import { Nav } from "../NavBar";
+import { LoadingSpinner } from "../LoadingSpinner";
 
 interface LinkItemProps {
   name: string;
@@ -22,10 +23,18 @@ const linkItems: Array<LinkItemProps> = [
   { name: "Home", icon: FiHome, route: "/" },
   { name: "Membros", icon: FiUsers, route: "/membros" },
   { name: "Aniversarios", icon: FiGift, route: "/aniversarios" },
-  { name: "Perfil", icon: FiUsers, route: "/profile" },
+  { name: "Perfil", icon: FiUser, route: "/profile" },
+  { name: "Cargos", icon: FiUsers, route: "/cargos" },
+  { name: "Usuários", icon: FiUserPlus, route: "/usuarios" },
 ];
 
-export function TemplateDashboard({ children }: { children: ReactNode }) {
+export function TemplateDashboard({
+  children,
+  loading = false,
+}: {
+  children: ReactNode;
+  loading?: boolean;
+}) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -52,7 +61,8 @@ export function TemplateDashboard({ children }: { children: ReactNode }) {
       {/* mobilenav */}
       <MobileNav display={{ base: "flex", md: "none" }} onOpen={onOpen} />
       <Box ml={{ base: 0, md: 60 }} p="4">
-        {children}
+        {loading && <LoadingSpinner></LoadingSpinner>}
+        {!loading && children}
       </Box>
     </Box>
   );

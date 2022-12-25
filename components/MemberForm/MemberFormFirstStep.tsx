@@ -10,15 +10,14 @@ import {
   Select,
   Stack,
 } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { supabase } from "../../database/supabaseClient";
 import { Member } from "../../entities/member";
-import {
-  BLOOD_TYPES,
-  EDUCATION_TYPES,
-  SUGGESTED_ROLES,
-} from "../../shared/constants";
-// import { useIMask } from "react-imask";
+import { Role } from "../../entities/roles";
+import { BLOOD_TYPES, EDUCATION_TYPES } from "../../shared/constants";
 import { removeSpecialCharacters } from "../../shared/utils/removeSpecialCharacters";
+
 type MemberFormFirstStepProps = {
   member: Member;
   // eslint-disable-next-line no-unused-vars
@@ -42,30 +41,29 @@ export const MemberFormFirstStep: React.FC<MemberFormFirstStepProps> = ({
     },
   });
 
+  const [roles, setRoles] = useState<Role[]>();
+
   // @ts-ignore
   function onFormSubmit(values) {
     setMember({ ...member, ...values });
     nextStep();
   }
 
-  // const { ref } = useIMask(
-  //   {
-  //     mask: "(00) 0 0000-0000",
-  //   },
-  //   {
-  //     onAccept: (value) => {
-  //       setValue("phoneNumber", value, {
-  //         shouldDirty: false,
-  //       });
-  //     },
-  //     onComplete: (value) => {
-  //       setValue("phoneNumber", value, {
-  //         shouldDirty: false,
-  //       });
-  //     },
-  //   }
-  // );
+  useEffect(() => {
+    supabase
+      .from("roles")
+      .select("*")
+      .then(({ data, error }) => {
+        if (error) {
+          console.log(error);
+        }
+        if (data) {
+          setRoles(data.map((role) => role));
+        }
+      });
+  }, []);
 
+  // conferir porque data de nascimento quando coloco 12 no mes manda 11
   return (
     <>
       <form onSubmit={handleSubmit(onFormSubmit)}>
@@ -141,12 +139,22 @@ export const MemberFormFirstStep: React.FC<MemberFormFirstStepProps> = ({
         <Divider></Divider>
         <FormControl pt={"2"}>
           <FormLabel>Cargo</FormLabel>
-          <Input
+          {/* <Input
             placeholder="Músico"
             {...register("role")}
             list="suggestedList"
-          />
-          <datalist id="suggestedList">
+          /> */}
+
+          <Select placeholder="Músico" {...register("role")}>
+            {roles?.map((role, index) => {
+              return (
+                <option value={role.name} key={index}>
+                  {role.name}
+                </option>
+              );
+            })}
+          </Select>
+          {/* <datalist id="suggestedList">
             {SUGGESTED_ROLES.map((role, index) => {
               return (
                 <option value={role} key={index}>
@@ -154,7 +162,7 @@ export const MemberFormFirstStep: React.FC<MemberFormFirstStepProps> = ({
                 </option>
               );
             })}
-          </datalist>
+          </datalist> */}
         </FormControl>
 
         <FormControl pt={"2"}>

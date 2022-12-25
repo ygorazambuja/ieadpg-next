@@ -53,7 +53,7 @@ export default function Home({ memberCount, newMembers, members }: HomeProps) {
   const { push } = useRouter();
 
   useEffect(() => {
-    if (!isAuthenticated()) {
+    if (!isAuthenticated) {
       push("/login");
     }
   }, [isAuthenticated, push]);

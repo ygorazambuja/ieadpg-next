@@ -1,22 +1,28 @@
 import { AuthChangeEvent, Session, User } from "@supabase/supabase-js";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { supabase } from "../database/supabaseClient";
 
 export function useSupabaseAuth() {
   const [user, setUser] = useState<User>({} as User);
   const [session, setSession] = useState<Session>({} as Session);
 
-  const isAuthenticated = () => {
-    return supabase.auth.session()?.user?.aud === "authenticated";
-  };
+  const isAuthenticated = useMemo(async () => {
+    const authSession = await supabase.auth.getSession();
 
-  const initSubscriptions = useCallback(() => {
-    const initedSession = supabase.auth.session();
+    if (authSession.data) {
+      return authSession.data.session?.user?.aud === "authenticated";
+    }
 
-    if (initedSession) {
-      setSession(initedSession);
-      if (initedSession.user) {
-        setUser(initedSession.user);
+    return false;
+  }, []);
+
+  const initSubscriptions = useCallback(async () => {
+    const initedSession = await supabase.auth.getSession();
+
+    if (initedSession.data.session) {
+      setSession(initedSession.data.session);
+      if (initedSession.data.session.user) {
+        setUser(initedSession.data.session.user);
       }
     }
 
@@ -25,7 +31,9 @@ export function useSupabaseAuth() {
     });
   }, []);
 
-  useEffect(initSubscriptions, [initSubscriptions]);
+  useEffect(() => {
+    initSubscriptions();
+  }, [initSubscriptions]);
 
   const handleSignInEvent = (event: AuthChangeEvent, session: Session) => {
     if (event === "SIGNED_IN") {

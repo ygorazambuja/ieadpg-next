@@ -49,7 +49,7 @@ export default function MembersPage({ members }: MembersPageProps) {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!isAuthenticated()) {
+    if (!isAuthenticated) {
       router.push("/login");
     }
   }, [isAuthenticated, router]);
