@@ -22,7 +22,7 @@ export default function ResetPassword() {
 
   // @ts-ignore
   async function onFormSubmit(values) {
-    const { error } = await supabase.auth.update({
+    const { error } = await supabase.auth.updateUser({
       email: "ygorazambuja@gmail.com",
       password: values.password,
     });

@@ -8,10 +8,11 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const { email } = req.body;
-  const { user, error } = await supabase.auth.signIn({ email });
+
+  const { data, error } = await supabase.auth.signInWithOtp({ email });
 
   if (error) {
     return res.status(500).json({ error });
   }
-  return res.status(200).json({ user });
+  return res.status(200).json({ data });
 }

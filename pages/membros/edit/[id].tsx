@@ -91,13 +91,10 @@ export default function MemberEdit({ member }: MemberEditProps) {
 
   async function asyncHandleUpsertMemberAvatar(Key: string) {
     try {
-      await supabase.from("members").upsert(
-        {
-          ...member,
-          avatar_url: Key,
-        },
-        { returning: "minimal" }
-      );
+      await supabase.from("members").upsert({
+        ...member,
+        avatar_url: Key,
+      });
 
       toast({
         title: "Sucesso",
@@ -116,14 +113,11 @@ export default function MemberEdit({ member }: MemberEditProps) {
 
   const handleMemberUpdate = async (member: Member) => {
     try {
-      await supabase.from("members").upsert(
-        {
-          ...member,
-          education: convertStringToPascalCase(member.education.trim()),
-          civilState: convertStringToPascalCase(member.civilState.trim()),
-        },
-        { returning: "minimal" }
-      );
+      await supabase.from("members").upsert({
+        ...member,
+        education: convertStringToPascalCase(member.education.trim()),
+        civilState: convertStringToPascalCase(member.civilState.trim()),
+      });
 
       toast({
         title: "Sucesso",

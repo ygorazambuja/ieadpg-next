@@ -23,7 +23,7 @@ export default function ForgotMyPassword() {
 
   // @ts-ignore
   async function onFormSubmit(values) {
-    const { data, error } = await supabase.auth.api.resetPasswordForEmail(
+    const { data, error } = await supabase.auth.resetPasswordForEmail(
       values.email
     );
 
