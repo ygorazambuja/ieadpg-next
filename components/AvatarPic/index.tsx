@@ -12,6 +12,8 @@ export const AvatarPic: React.FC<AvatarPicProps> = ({
   onUpload,
   ...rest
 }) => {
+  const hasUploadFunction = !!onUpload;
+
   function handleOpenFileUpload() {
     if (!onUpload) {
       return;
@@ -33,7 +35,7 @@ export const AvatarPic: React.FC<AvatarPicProps> = ({
   return (
     <Box>
       <Avatar
-        cursor={"pointer"}
+        cursor={hasUploadFunction ? "pointer" : "default"}
         name={name}
         {...rest}
         onClick={handleOpenFileUpload}

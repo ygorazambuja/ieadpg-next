@@ -2,6 +2,8 @@ import { supabase } from "../../database/supabaseClient";
 
 export async function downloadImage(path: string) {
   try {
+    if (!path) return "";
+
     const { data, error } = await supabase.storage
       .from("members-profile-avatar")
       .download(path);

@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { GetServerSidePropsContext } from "next";
-import { Box, Divider, Heading, Stack } from "@chakra-ui/react";
+import { Box, Divider, Heading, IconButton, Stack } from "@chakra-ui/react";
 import { TemplateDashboard } from "../../../components/TemplateDashboard";
 import { Member } from "../../../entities/member";
 import { AvatarPic } from "../../../components/AvatarPic";
 import { downloadImage } from "../../../services/members/downloadAvatar";
 import { supabase } from "../../../database/supabaseClient";
+import { ArrowBackIcon, EditIcon } from "@chakra-ui/icons";
+import { useRouter } from "next/router";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const id = context.params?.id;
@@ -40,6 +42,8 @@ type MemberDetailsProps = {
 
 export default function MemberDetails({ member }: MemberDetailsProps) {
   const [avatarUrl, setAvatarUrl] = useState("");
+  const router = useRouter();
+
   useEffect(() => {
     async function asyncDownloadImage() {
       if (member?.avatar_url) {
@@ -52,11 +56,30 @@ export default function MemberDetails({ member }: MemberDetailsProps) {
 
   return (
     <TemplateDashboard>
-      <Heading>Detalhes</Heading>
+      <Heading mb={8}>
+        <IconButton
+          aria-label="voltar"
+          icon={<ArrowBackIcon />}
+          mr={6}
+          onClick={() => router.back()}
+        ></IconButton>
+        Detalhes
+      </Heading>
 
       <Stack direction={["column", "row"]} alignItems="center" py="4">
         <AvatarPic name={member.name} src={avatarUrl} size={"xl"} />
-        <Box>Nome Completo: {member.name}</Box>
+        <Box>
+          <Heading as="h2" size="lg" ml={4}>
+            {member.name}
+          </Heading>
+        </Box>
+        <IconButton
+          onClick={() => {
+            router.push(`/membros/edit/${member.id}`);
+          }}
+          aria-label="editar"
+          icon={<EditIcon color={"orange"} />}
+        />
       </Stack>
 
       <Stack direction={["column", "row"]}>
@@ -91,10 +114,10 @@ export default function MemberDetails({ member }: MemberDetailsProps) {
 
       <Stack direction={["column", "row"]}>
         <Box width={"full"} py="2">
-          Estado: {member.birthState}
+          <strong>Estado:</strong> {member.birthState}
         </Box>
         <Box width={"full"} py="2">
-          Cidade: {member.birthCity}
+          <strong>Cidade:</strong> {member.birthCity}
         </Box>
       </Stack>
 

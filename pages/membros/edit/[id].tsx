@@ -48,6 +48,8 @@ export default function MemberEdit({ member }: MemberEditProps) {
 
   const [memberToUpdate, setMemberToUpdate] = useState(member);
 
+  const router = useRouter();
+
   useEffect(() => {
     async function loadAvatar() {
       try {
@@ -124,6 +126,8 @@ export default function MemberEdit({ member }: MemberEditProps) {
         description: "Membro atualizado com sucesso",
         status: "success",
       });
+
+      router.push(`/membros/${member.id}`);
     } catch (error) {
       toast({
         title: "Erro",
